@@ -1,0 +1,53 @@
+{% extends 'myapp/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1>My Tasks</h1>
+            <a href="{% url 'todo_create' %}" class="btn btn-success">+ New Task</a>
+        </div>
+
+        <div class="list-group shadow-sm">
+            {% for todo in todos %}
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <!-- Toggle Status Link -->
+                        <a href="{% url 'todo_toggle_resolve' todo.pk %}" class="text-decoration-none me-3 fs-4">
+                            {% if todo.is_resolved %}
+                                ✅
+                            {% else %}
+                                ⬜
+                            {% endif %}
+                        </a>
+
+                        <!-- Task Details -->
+                        <div>
+                            <h5 class="mb-0 {% if todo.is_resolved %}completed-task{% endif %}">
+                                {{ todo.title }}
+                            </h5>
+                            {% if todo.due_date %}
+                                <small class="text-muted">
+                                    Due: {{ todo.due_date|date:"M d, Y" }}
+                                </small>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div>
+                        <a href="{% url 'todo_update' todo.pk %}" class="btn btn-sm btn-outline-primary">Edit</a>
+                        <a href="{% url 'todo_delete' todo.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="list-group-item text-center py-5 text-muted">
+                    No tasks yet. Create one to get started!
+                </div>
+            {% endfor %}
+        </div>
+        
+    </div>
+</div>
+{% endblock %}
